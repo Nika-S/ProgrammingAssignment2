@@ -3,7 +3,9 @@
 ## previosly
 
 
-## Write a short comment describing this function
+## This function creates a special "matrix" object that can cache its inverse
+## the argument x should be an invertable square matrix 
+## initialization example:#  n<-makeCacheMatrix( matrix(c(1, 3, 2, 4),nrow=2,ncol=2))
 
 makeCacheMatrix <- function(x = matrix()) {
 
