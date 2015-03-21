@@ -7,8 +7,9 @@
 ## the argument x should be an invertable square matrix 
 ## initialization example:#  n<-makeCacheMatrix( matrix(c(1, 3, 2, 4),nrow=2,ncol=2))
 
-makeCacheMatrix <- function(x = matrix()) {
-inv <- NULL #Inverse of the matrix x is not known until it is set by setsolve method 
+makeCacheMatrix <- function(x = matrix(,)) {
+
+        inv <- NULL #Inverse of the matrix x is not known until it is set by setsolve method 
                     # or  calculated by the function cacheSolve()
 
         # 'set' method below is used to set new data list instead of the one which was set by creating object
@@ -21,7 +22,7 @@ inv <- NULL #Inverse of the matrix x is not known until it is set by setsolve me
         setsolve <- function(solve) inv <<- solve
 
         getsolve <- function() inv  # this "method" returns inverse matrix cached previously 
-                                    # (or set by setsolve() or NULL if it wasn't set before  
+                                    # (or set by setsolve() or NULL if it wasn't set before)  
 
         # return list of "methods" with their values
         list(set = set, get = get,
@@ -30,8 +31,23 @@ inv <- NULL #Inverse of the matrix x is not known until it is set by setsolve me
 }
 
 
-## Write a short comment describing this function
+## This function computes the inverse of the special "matrix" returned by makeCacheMatrix
+## If the inverse has already been calculated (and the matrix has not changed), 
+## then the cachesolve should retrieve the inverse from the cache.
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+## Return a matrix that is the inverse of 'x'
+
+        inv <- x$getsolve()  # checks if inverse matrix is in cache of object x, 
+                             # created with makeCacheMatrix function
+
+        # if inverse matrix is in cache, we load it from there, return value and exit from the function
+        if(!is.null(inv)) {
+                message("getting cached data")
+                return(inv)
+        }
+        data <- x$get() # gets the original matrix stored in makeCacheMatrix
+        inv <- solve(data, ...)  # calculates inverse of this matrix
+        x$setsolve(inv)          # write the obtained inverse to cach of makeCacheMatrix function object inv
+        inv                      # returns inv
 }
